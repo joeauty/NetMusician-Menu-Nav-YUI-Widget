@@ -233,6 +233,8 @@ YUI().use('nmmenus', 'event-delegate', function(Y) {
 	
 	function ajaxLoadFunc(divtag) {
 		Y.delegate("click", function(e) {
+			// skip AJAX stuff for links marked with "noajax" class
+			if (Y.one('#' + this.get('id')).hasClass('noajax')) { return; }
 			e.preventDefault();
 			nmmenu.menuItemPulsate(this.get('id'), nmmenu, ajaxLoadTrigger, {
 				page:this.get('pathname'),
