@@ -2,9 +2,9 @@ Features
 --------
 
 - Your own Javascript events that are triggered when certain menu items are selected
-- "blind" or "fade" animations that utilize YUI Transitions. YUI Transitions utilize GPU accelerated CSS3 transitions by supported browsers
+- "blind" or "fade" animations that utilize YUI Transitions. YUI Transitions utilize GPU accelerated CSS3 transitions by supported browsers, and fall back to timer based animations on browsers that don't. This means that on modern browsers your menus should be super responsive and not hindered by these animation triggers!
 - in and out animation duration settings
-- Desktop application style pulsate animation effects when a menu item has been selected, pulsate settings
+- Desktop application style pulsate animation effects when a menu item has been selected, including pulsate settings
 
 Philosophy
 ----------
@@ -64,6 +64,9 @@ When *ajaxLoadFunc* is provided within the initializing config object, this func
 
 If you are interested in using the pulsate animation with your *ajaxLoadFunc* function, simply call on the function as follows:
 
+	var nmmenu = new Y.NMMenus({
+		... your config here
+	});
 	nmmenu.menuItemPulsate(this.get('id'), nmmenu, ajaxLoadTrigger, {
             page:this.get('pathname'),
             id:this.get('id')
