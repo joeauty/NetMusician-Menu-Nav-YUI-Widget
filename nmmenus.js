@@ -54,7 +54,7 @@ YUI.add('nmmenus', function(Y){
 						if (!item.hasClass('noajax')) { 
 							Y.on('click', function(e) {
 								e.preventDefault();																				
-								nmmenu.menuItemPulsate(item.get('id'), nmmenu.get('ajaxLoadFunc'), {
+								nmmenu.menuItemPulsate(item.get('id'), nmmenu, nmmenu.get('ajaxLoadFunc'), {
 									page:'page-' + item.get('pathname'),
 									path:item.get('pathname'),
 									topLi:topLi
@@ -176,11 +176,11 @@ YUI.add('nmmenus', function(Y){
 				// skip AJAX stuff for links marked with "noajax" class
 				if (Y.one('#' + this.get('id')).hasClass('noajax')) { return; }
 				e.preventDefault();
-				nmmenu.menuItemPulsate(this.get('id'), callbackFunc, callbackArgs);
+				nmmenu.menuItemPulsate(this.get('id'), nmmenu, callbackFunc, callbackArgs);
 			}, '#' + nmmenu.get('menudivid') + ' ' + nmmenu.get('submenu'), 'a');
 		},
 			
-		menuItemPulsate : function(ID, callbackFunc, callbackArgs) {
+		menuItemPulsate : function(ID, menuObj, callbackFunc, callbackArgs) {
 			// mimics Script.aculo.us's Effect.Pulsate using YUI transition
 
 			Y.one('#' + ID).transition({
@@ -195,7 +195,7 @@ YUI.add('nmmenus', function(Y){
 								end:function() {																		
 									if (nmmenu.get('pulsesleft') > 1) {
 										nmmenu.set('pulsesleft', nmmenu.get('pulsesleft') - 1);
-										nmmenu.menuItemPulsate(ID, callbackFunc, callbackArgs)
+										nmmenu.menuItemPulsate(ID, menuObj, callbackFunc, callbackArgs)
 									}
 									else {
 										// reset pulsesleft var									

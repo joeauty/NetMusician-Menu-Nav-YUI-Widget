@@ -6,6 +6,46 @@
 	<title>NetMusician Menu Nav Demo</title>
 	<script type='text/javascript' src='http://yui.yahooapis.com/3.3.0/build/yui/yui-min.js'></script>	
 	<script type="text/javascript" src="nmmenus.js"></script>
+	<script type="text/javascript">
+		YUI().use('nmmenus', 'event-delegate', function(Y) {
+		        var config = {
+		                anim:'blind',
+		                ajaxLoadFunc:Y.bind(ajaxLoadFunc('menublock'), this),
+		                pulses:2,
+		                pulseduration:0.3
+		        }
+
+		        var nmmenu = new Y.NMMenus(config);
+
+		        function ajaxLoadFunc(divtag) {
+		                Y.delegate("click", function(e) {
+		                        // skip AJAX stuff for links marked with "noajax" class
+		                        if (Y.one('#' + this.get('id')).hasClass('noajax')) { return; }
+		                        e.preventDefault();
+		                        nmmenu.menuItemPulsate(this.get('id'), nmmenu, ajaxLoadTrigger, {
+		                                page:this.get('pathname'),
+		                                id:this.get('id')
+		                        });
+		                }, '#menublock .submenu', 'a');
+		        }
+
+		        function ajaxLoadTrigger(configObj) {
+		                switch (configObj.id) {
+		                        case 'menu_JohnColtrane':
+		                        //alert('do Coltrane thing');
+		                        break;
+
+		                        case 'menu_MilesDavis':
+		                        alert('do Miles Davis thing');
+		                        break;
+
+		                        default:
+		                        window.location.href = configObj.page;
+		                        break;
+		                }
+		        }
+		});
+	</script>
 	<style type="text/css">
 	#menublock {
 		font-family:Arial,Helvetica,sans-serif;
