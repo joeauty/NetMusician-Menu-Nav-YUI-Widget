@@ -1,21 +1,16 @@
-var nmmenu = null;
 YUI.add('nmmenus', function(Y){    
 	
     Y.NMMenus = Y.Base.create('nmmenus', Y.Widget, [], {	 
 		initializer : function( config ) {		
-			// make user provided config available outside of this function and accessible without
-			// having to create a new instance of object
-			nmmenu = this;
-			
-			// determine submenu CSS class/ID
-			submenuid = Y.one('#menublock .hasSubMenu').get('parentNode').one('ul').get('id');
-			submenuclass = Y.one('#menublock .hasSubMenu').get('parentNode').one('ul').get('className');			
-			if (submenuid) {
-				this.set('submenu', '#' + submenuid);
-			}
-			else {
-				this.set('submenu', '.' + submenuclass);
-			}
+			// add hasSubMenu class to all submenus
+			Y.all('#' + this.get('menudivid') + ' ul li ul').each(function(submenu) {
+				submenu.get('parentNode').one('.topLink').addClass('hasSubMenu');
+			});
+								
+			if (this.get('ajaxLoadFunc')) {	
+				// invoke custom function that sets up JS observers for menu items
+				this.get('ajaxLoadFunc').call(null, this);
+			}			
 			
 			// init variables for menuItemPulsate function
 			this.set('pulsesleft', this.get('pulses'));
@@ -23,7 +18,7 @@ YUI.add('nmmenus', function(Y){
 			
 			if (!this.get('nopulsate') && !this.get('ajaxLoadFunc')) {
 				// no custom AJAX stuff set, trigger menu item pulsate
-				this.initNavMenuPulsate();
+				this.initNavMenuPulsate.call(this);
 			}
 			
 			// make sure that top level menu items are not erronously marked as active
@@ -34,48 +29,30 @@ YUI.add('nmmenus', function(Y){
 					}
 				}, node);
 				
-				if (!node.hasClass('hasSubMenu')) {				
+				if (!node.hasClass('hasSubMenu')) {	
+					// make sure top level links are marked as inactive on mouseleave			
 					Y.on('mouseleave', function(e) {
 						node.get('parentNode').removeClass('active');
 					}, node);
 				}
 			});
-			
-			// add hasSubMenu class to all submenus
-			Y.all('#' + this.get('menudivid') + ' ul li ul').addClass('hasSubMenu');
-		
+					
 			Y.all('#' + this.get('menudivid') + ' .hasSubMenu').each(function(node, idx) {
 				var topLi = node.get('parentNode'),			
 					subMenu = topLi.one('ul');		
-					
-				if (this.get('ajaxLoadFunc')) {
-					// add click observers					
-					subMenu.all('li a').each(function(item) {
-						if (!item.hasClass('noajax')) { 
-							Y.on('click', function(e) {
-								e.preventDefault();																				
-								nmmenu.menuItemPulsate(item.get('id'), nmmenu, nmmenu.get('ajaxLoadFunc'), {
-									page:'page-' + item.get('pathname'),
-									path:item.get('pathname'),
-									topLi:topLi
-								});
-							}, item)
-						}
-					});
-				}																	
-							
+										
 				// establish mouseenter observer
 				Y.on('mouseenter', function(e) {					
 					// make sure all other menus do not have .active class set											
-					Y.all('#' + nmmenu.get('menudivid') + ' .hasSubMenu').get('parentNode').removeClass('active');																																												
+					Y.all('#' + this.get('menudivid') + ' .hasSubMenu').get('parentNode').removeClass('active');																																												
 					
 					// mark menu as active
 					topLi.addClass('active');
 					
 					// calculate menu dimensions
-					var menuDimensions = nmmenu.calcMenuDimensions(subMenu);				
+					var menuDimensions = this.calcMenuDimensions(subMenu);				
 										
-					switch (nmmenu.get('anim')) {
+					switch (this.get('anim')) {
 						case 'fade':
 						subMenu.setStyles({
 							opacity:0,
@@ -85,7 +62,7 @@ YUI.add('nmmenus', function(Y){
 						subMenu.transition({
 							opacity:1,
 							easing:'ease-out',
-							duration:nmmenu.get('inDuration')
+							duration:this.get('inDuration')
 						});	
 						break;
 						
@@ -103,7 +80,7 @@ YUI.add('nmmenus', function(Y){
 						// start transition
 						subMenu.transition({
 							height:menuDimensions[1],
-							duration:nmmenu.get('inDuration'),
+							duration:this.get('inDuration'),
 							easing:'ease-out',
 							on : {								
 								end:function() {									
@@ -113,14 +90,14 @@ YUI.add('nmmenus', function(Y){
 						})
 						break;
 					}
-				}, topLi);
+				}, topLi, this);
 				
 				Y.on('mouseleave', function(e) {
-					// hide menu
-					nmmenu.hideNavMenu({
-						topLi:topLi
+					// hide menu				
+					this.hideNavMenu.call(this, {
+						topLi:topLi	
 					});
-				}, topLi);							
+				}, topLi, this);							
 			}, this);		
 		},
 
@@ -139,7 +116,7 @@ YUI.add('nmmenus', function(Y){
 		
 		hideNavMenu : function(configObj) {
 			// set subMenu property to use as an alias referencing the submenu, below
-			configObj.subMenu = configObj.topLi.one(nmmenu.get('submenu'));			
+			configObj.subMenu = configObj.topLi.one('ul');
 			switch (this.get('anim')) {
 				case 'fade':
 				configObj.subMenu.transition({
@@ -171,43 +148,41 @@ YUI.add('nmmenus', function(Y){
 			}
 		},
 		
-		initNavMenuPulsate : function(callbackFunc, callbackArgs) {			
-			Y.delegate("click", function(e) {
+		initNavMenuPulsate : function(callbackFunc, callbackArgs) {		
+			Y.delegate('click', Y.bind(function(e) {
 				// skip AJAX stuff for links marked with "noajax" class
-				if (Y.one('#' + this.get('id')).hasClass('noajax')) { return; }
+				if (Y.one('#' + e.target.get('id')).hasClass('noajax')) { return; }
 				e.preventDefault();
-				nmmenu.menuItemPulsate(this.get('id'), nmmenu, callbackFunc, callbackArgs);
-			}, '#' + nmmenu.get('menudivid') + ' ' + nmmenu.get('submenu'), 'a');
+				this.menuItemPulsate.call(this, e.target.get('id'), callbackFunc, callbackArgs);
+			}, this), '#' + this.get('menudivid') + ' ul', 'a');
 		},
 			
-		menuItemPulsate : function(ID, menuObj, callbackFunc, callbackArgs) {
+		menuItemPulsate : function(ID, callbackFunc, callbackArgs) {
 			// mimics Script.aculo.us's Effect.Pulsate using YUI transition
-
 			Y.one('#' + ID).transition({
 				opacity:0,
-				duration:(nmmenu.get('pulseduration') / 2),
+				duration:(this.get('pulseduration') / 2),
 				on : {
-					end: function() {
+					end: Y.bind(function() {
 						Y.one('#' + ID).transition({
 							opacity:1,
-							duration:(nmmenu.get('pulseduration') / 2),
+							duration:(this.get('pulseduration') / 2),
 							on : {
-								end:function() {																		
-									if (nmmenu.get('pulsesleft') > 1) {
-										nmmenu.set('pulsesleft', nmmenu.get('pulsesleft') - 1);
-										nmmenu.menuItemPulsate(ID, menuObj, callbackFunc, callbackArgs)
+								end: Y.bind(function() {
+									if (this.get('pulsesleft') > 1) {
+										this.set('pulsesleft', this.get('pulsesleft') - 1);
+										this.menuItemPulsate.call(this, ID, callbackFunc, callbackArgs);
 									}
 									else {
 										// reset pulsesleft var									
-										nmmenu.set('pulsesleft', nmmenu.get('pulses'));
+										this.set('pulsesleft', this.get('pulses'));
 										
-										// hide menu
-										nmmenu.hideNavMenu({
-											topLi:Y.one('#' + nmmenu.get('menudivid') + ' li.active')
+										// hide menu									
+										this.hideNavMenu.call(this, {
+											topLi:Y.one('#' + this.get('menudivid') + ' li.active')	
 										});
 										
 										if (callbackFunc) {
-											Y.log('trigger callback');
 											callbackFunc(callbackArgs);
 										}
 										else {
@@ -216,10 +191,10 @@ YUI.add('nmmenus', function(Y){
 											window.location.href = Y.one('#' + ID).get('pathname');
 										}	
 									}								
-								}
+								}, this)
 							}
 						})
-					}
+					}, this)
 				}
 			})
 		}

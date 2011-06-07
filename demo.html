@@ -7,44 +7,44 @@
 	<script type='text/javascript' src='http://yui.yahooapis.com/3.3.0/build/yui/yui-min.js'></script>	
 	<script type="text/javascript" src="nmmenus.js"></script>
 	<script type="text/javascript">
-		YUI().use('nmmenus', 'event-delegate', function(Y) {
-		        var config = {
-		                anim:'blind',
-		                ajaxLoadFunc:Y.bind(ajaxLoadFunc('menublock'), this),
-		                pulses:2,
-		                pulseduration:0.3
-		        }
+	YUI().use('nmmenus', 'event-delegate', function(Y) {
+		var config = {
+			anim:'blind',
+			ajaxLoadFunc:Y.bind(ajaxLoadFunc),
+			pulses:2,
+			pulseduration:0.3
+		}
 
-		        var nmmenu = new Y.NMMenus(config);
+		var nmmenu = new Y.NMMenus(config);
 
-		        function ajaxLoadFunc(divtag) {
-		                Y.delegate("click", function(e) {
-		                        // skip AJAX stuff for links marked with "noajax" class
-		                        if (Y.one('#' + this.get('id')).hasClass('noajax')) { return; }
-		                        e.preventDefault();
-		                        nmmenu.menuItemPulsate(this.get('id'), nmmenu, ajaxLoadTrigger, {
-		                                page:this.get('pathname'),
-		                                id:this.get('id')
-		                        });
-		                }, '#menublock .submenu', 'a');
-		        }
+		function ajaxLoadFunc(nmmenu) {
+			Y.delegate("click", function(e) {
+				// skip AJAX stuff for links marked with "noajax" class
+				if (Y.one('#' + this.get('id')).hasClass('noajax')) { return; }
+				e.preventDefault();
+				nmmenu.menuItemPulsate(this.get('id'), ajaxLoadTrigger, {
+					page:this.get('pathname'),
+					id:this.get('id')
+				});
+			}, '#' + nmmenu.get('menudivid') + ' ul', 'a');
+		}
 
-		        function ajaxLoadTrigger(configObj) {
-		                switch (configObj.id) {
-		                        case 'menu_JohnColtrane':
-		                        //alert('do Coltrane thing');
-		                        break;
+		function ajaxLoadTrigger(configObj) {
+			switch (configObj.id) {
+				case 'menu_JohnColtrane':
+				//alert('do Coltrane thing');
+				break;
 
-		                        case 'menu_MilesDavis':
-		                        alert('do Miles Davis thing');
-		                        break;
+				case 'menu_MilesDavis':
+				alert('do Miles Davis thing');
+				break;
 
-		                        default:
-		                        window.location.href = configObj.page;
-		                        break;
-		                }
-		        }
-		});
+				default:
+				window.location.href = configObj.page;
+				break;
+			}
+		}
+	});
 	</script>
 	<style type="text/css">
 	#menublock {
@@ -95,7 +95,8 @@
 	    border:1px #444 solid;	
 	}
 
-	#menublock .submenu {
+	/* submenus */
+	#menublock ul li ul {
 		display:none; 
 		background-color:#f1f2f4;
 		overflow:hidden;
@@ -104,20 +105,20 @@
 		-webkit-box-shadow:0 3px 3px rgba(0,0,0,0.2);
 	}
 
-	#menublock .submenu li {
+	#menublock ul li ul li {
 		display: block;
 		position: relative;
 	}
 
-	#menublock .submenu li a.top {
+	#menublock ul li ul li a.top {
 		padding-top:5px;
 	}
 
-	 #menublock .submenu li a.bottom {
+	 #menublock ul li ul li a.bottom {
 		padding-bottom:5px;
 	}
 
-	#menublock .submenu li a {
+	#menublock ul li ul li a {
 		padding-left:10px;
 		padding-right:10px;  
 		display:block;
@@ -125,7 +126,7 @@
 		line-height:20px;
 	}
 
-	#menublock .submenu li a:hover {
+	#menublock ul li ul li a:hover {
 		background:#333;
 		color:#fff;
 	}
@@ -136,8 +137,8 @@
 	<div id="menublock">
 		<ul> 
 			<li id='nm_id_home' class='nm_home'><a class='topLink' href='/'>Home</a></li> 
-			<li id='nm_id_artist' class='nm_artist'><a class='topLink hasSubMenu' href='#'>Artist</a> 
-				<ul class='submenu'> 
+			<li id='nm_id_artist' class='nm_artist'><a class='topLink' href='#'>Artist</a> 
+				<ul> 
 					<li> 
 						<a id='menu_JohnColtrane' href='/artist/johncoltrane' class='top noajax'>John Coltrane</a> 
 					</li> 
