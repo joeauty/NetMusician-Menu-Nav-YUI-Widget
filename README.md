@@ -64,10 +64,10 @@ When *ajaxLoadFunc* is provided within the initializing config object, this func
 
 If you are interested in using the pulsate animation with your *ajaxLoadFunc* function, simply call on the function as follows:
 
-   nmmenu.menuItemPulsate(this.get('id'), ajaxLoadTrigger, {
-        page:this.get('pathname'),
-       	id:this.get('id')
-   });
+	nmmenu.menuItemPulsate(this.get('id'), ajaxLoadTrigger, {
+		page:this.get('pathname'),
+		id:this.get('id')
+	});
 
 where the first argument is the CSS ID of the item that should pulsate (i.e. the link that was clicked on), the second argument should be the function that is triggered once the pulsate animation has been completed, and the third argument an object containing various arguments that should be passed on to this latter function specified as your third argument. If you study the usage example, below, you will see that we recommend sending your final Javascript function that acts on your menu selection both the CSS and pathname of the item that was clicked. This allows you to do different things depending on your selection and/or have exceptions/overrides to your default action.
 
