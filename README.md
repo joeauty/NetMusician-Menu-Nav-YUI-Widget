@@ -19,8 +19,8 @@ First, create the HTML that will be used to display your menus in the following 
 	<div id="menublock">
 	    <ul> 
 	        <li id='nm_id_home' class='nm_home'><a class='topLink' href='/'>Home</a></li> 
-	        <li id='nm_id_artist' class='nm_artist'><a class='topLink hasSubMenu' href='#'>Artist</a> 
-	            <ul class='submenu'> 
+	        <li id='nm_id_artist' class='nm_artist'><a class='topLink' href='#'>Artist</a> 
+	            <ul> 
 	                <li> 
 	                    <a id='menu_JohnColtrane' href='/artist/johncoltrane' class='top noajax'>John Coltrane</a> 
 	                </li> 
@@ -54,7 +54,7 @@ First, create the HTML that will be used to display your menus in the following 
 	</div>
 
 
-Node the div ID used as a wrapper for your menu (in this case *menublock*). Note that your submenus need to have the class *submenu*, and your link that triggers your menu on mouseover needs to have the class *hasSubMenu*. A whole plethora of additional CSS classes are attached so that you can skin these menus to your liking.
+Node the div ID used as a wrapper for your menu (in this case *menublock*), you will need to provide this when the widget is instantiated if you wish to use an ID other than *menublock*. A whole plethora of additional CSS classes are attached so that you can skin these menus to your liking.
 
 
 AJAX Driven Menus
@@ -64,15 +64,12 @@ When *ajaxLoadFunc* is provided within the initializing config object, this func
 
 If you are interested in using the pulsate animation with your *ajaxLoadFunc* function, simply call on the function as follows:
 
-	var nmmenu = new Y.NMMenus({
-		... your config here
-	});
-	nmmenu.menuItemPulsate(this.get('id'), nmmenu, ajaxLoadTrigger, {
+	nmmenu.menuItemPulsate(this.get('id'), ajaxLoadTrigger, {
             page:this.get('pathname'),
             id:this.get('id')
-    });
+    	});
 
-where the first argument is the CSS ID of the item that should pulsate (i.e. the link that was clicked on), the second argument should be the menu object initialized with your config, the third argument should be the function that is triggered once the pulsate animation has been completed, and the fourth argument an object containing various arguments that should be passed on to this latter function specified as your third argument. If you study the usage example, below, you will see that we recommend sending your final Javascript function that acts on your menu selection both the CSS and pathname of the item that was clicked. This allows you to do different things depending on your selection and/or have exceptions/overrides to your default action.
+where the first argument is the CSS ID of the item that should pulsate (i.e. the link that was clicked on), the second argument should be the function that is triggered once the pulsate animation has been completed, and the third argument an object containing various arguments that should be passed on to this latter function specified as your third argument. If you study the usage example, below, you will see that we recommend sending your final Javascript function that acts on your menu selection both the CSS and pathname of the item that was clicked. This allows you to do different things depending on your selection and/or have exceptions/overrides to your default action.
 
 
 Full Usage Example
@@ -81,7 +78,7 @@ Full Usage Example
 	YUI().use('nmmenus', 'event-delegate', function(Y) {
 	        var config = {
 	                anim:'blind',
-	                ajaxLoadFunc:Y.bind(ajaxLoadFunc('menublock'), this),
+	                ajaxLoadFunc:Y.bind(ajaxLoadFunc('menublock'),
 	                pulses:2,
 	                pulseduration:0.3
 	        }
@@ -89,15 +86,15 @@ Full Usage Example
 	        var nmmenu = new Y.NMMenus(config);
         
 	        function ajaxLoadFunc(divtag) {
-	                Y.delegate("click", function(e) {
+	                Y.delegate('click', function(e) {
 	                        // skip AJAX stuff for links marked with "noajax" class
 	                        if (Y.one('#' + this.get('id')).hasClass('noajax')) { return; }
 	                        e.preventDefault();
-	                        nmmenu.menuItemPulsate(this.get('id'), nmmenu, ajaxLoadTrigger, {
+	                        nmmenu.menuItemPulsate(this.get('id'), ajaxLoadTrigger, {
 	                                page:this.get('pathname'),
 	                                id:this.get('id')
 	                        });
-	                }, '#menublock .submenu', 'a');
+	                }, '#' + nmmenu.get('menudivid') + ' li ul', 'a');
 	        }
 
 	        function ajaxLoadTrigger(configObj) {

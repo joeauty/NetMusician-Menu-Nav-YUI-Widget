@@ -18,7 +18,7 @@
 		var nmmenu = new Y.NMMenus(config);
 
 		function ajaxLoadFunc(nmmenu) {
-			Y.delegate("click", function(e) {
+			Y.delegate('click', function(e) {
 				// skip AJAX stuff for links marked with "noajax" class
 				if (Y.one('#' + this.get('id')).hasClass('noajax')) { return; }
 				e.preventDefault();
@@ -26,7 +26,7 @@
 					page:this.get('pathname'),
 					id:this.get('id')
 				});
-			}, '#' + nmmenu.get('menudivid') + ' ul', 'a');
+			}, '#' + nmmenu.get('menudivid') + ' li ul', 'a');
 		}
 
 		function ajaxLoadTrigger(configObj) {
