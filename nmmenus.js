@@ -9,7 +9,7 @@ YUI.add('nmmenus', function(Y){
 								
 			if (this.get('ajaxLoadFunc')) {	
 				// invoke custom function that sets up JS observers for menu items
-				this.get('ajaxLoadFunc').call(null, this);
+			        this.get('ajaxLoadFunc').call(null, this, this);
 			}			
 			
 			// init variables for menuItemPulsate function
