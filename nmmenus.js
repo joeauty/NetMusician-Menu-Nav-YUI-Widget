@@ -23,12 +23,6 @@ YUI.add('nmmenus', function(Y){
 			
 			// make sure that top level menu items are not erronously marked as active
 			Y.all('#' + this.get('menudivid') + ' .topLink').each(function(node) {
-				Y.on('click', function(e) {
-					if (node.get('href').match(/\/#$/)) {
-						e.preventDefault();
-					}
-				}, node);
-				
 				if (!node.hasClass('hasSubMenu')) {	
 					// make sure top level links are marked as inactive on mouseleave			
 					Y.on('mouseleave', function(e) {
@@ -148,13 +142,32 @@ YUI.add('nmmenus', function(Y){
 			}
 		},
 		
-		initNavMenuPulsate : function(callbackFunc, callbackArgs) {		
-			Y.delegate('click', Y.bind(function(e) {
-				// skip AJAX stuff for links marked with "noajax" class
-				if (Y.one('#' + e.target.get('id')).hasClass('noajax')) { return; }
-				e.preventDefault();
-				this.menuItemPulsate.call(this, e.target.get('id'), callbackFunc, callbackArgs);
-			}, this), '#' + this.get('menudivid') + ' ul', 'a');
+		initNavMenuPulsate : function(callbackFunc, callbackArgs) {	
+			Y.all('#' + this.get('menudivid') + ' li a.topLink').each(function(node) {
+				node = node.get('parentNode');
+
+				Y.delegate('click', Y.bind(function(e) {
+					if (e.target.get('href').match(/#$/) && e.target.hasClass('topLink')) {
+						// cancel click
+						e.preventDefault();
+						return;
+					}
+					else if (Y.one('#' + e.target.get('id')).hasClass('noajax')) { 
+						// abort, but do not cancel click
+						return; 
+					}
+					e.preventDefault();
+					if (e.target.hasClass('topLink')) {
+						// top level link, do not init pulsate
+						window.location.href = e.target.get('href');	
+					}
+					else {
+						this.menuItemPulsate(e.target.get('id'), function() {
+							window.location.href = e.target.get('href');
+						});	
+					}			
+				}, this), node, 'a');		
+			}, this);		
 		},
 			
 		menuItemPulsate : function(ID, callbackFunc, callbackArgs) {
