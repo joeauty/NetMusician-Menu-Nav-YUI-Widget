@@ -85,17 +85,37 @@ Full Usage Example
        
         var nmmenu = new Y.NMMenus(config);
        
-        function ajaxLoadFunc(divtag) {
-                Y.delegate('click', function(e) {
-                        // skip AJAX stuff for links marked with "noajax" class
-                        if (Y.one('#' + this.get('id')).hasClass('noajax')) { return; }
-                        e.preventDefault();
-                        nmmenu.menuItemPulsate(this.get('id'), ajaxLoadTrigger, {
-                                page:this.get('pathname'),
-                                id:this.get('id')
-                        });
-                }, '#' + nmmenu.get('menudivid') + ' li ul', 'a');
-        }
+   		function ajaxLoadFunc(nmmenu) {
+			Y.all('#' + nmmenu.get('menudivid') + ' li a.topLink').each(function(node) {
+				node = node.get('parentNode');
+
+				Y.delegate('click', function(e) {
+					if (this.get('href').match(/#$/) && this.hasClass('topLink')) {
+						// cancel click
+						e.preventDefault();
+						return;
+					}
+					else if (Y.one('#' + this.get('id')).hasClass('noajax')) { 
+						// abort, but do not cancel click
+						return; 
+					}
+					e.preventDefault();
+					if (this.hasClass('topLink')) {
+						// top level link, do not init pulsate
+						ajaxLoadTrigger({
+							page:this.get('pathname'),
+							id:this.get('id')
+						})
+					}
+					else {
+						nmmenu.menuItemPulsate(this.get('id'), ajaxLoadTrigger, {
+							page:this.get('pathname'),
+							id:this.get('id')
+							});	
+					}			
+				}, node, 'a');		
+			});
+		}
 
         function ajaxLoadTrigger(configObj) {
                 switch (configObj.id) {
