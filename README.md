@@ -75,7 +75,7 @@ where the first argument is the CSS ID of the item that should pulsate (i.e. the
 Full Usage Example
 ------------------
 
-	YUI().use('nmmenus', 'event-delegate', function(Y) {
+	YUI().use('gallery-nmmenus', 'event-delegate', function(Y) {
 		var config = {
 			anim:'blind',
 			ajaxLoadFunc:Y.bind(ajaxLoadFunc),
@@ -83,7 +83,7 @@ Full Usage Example
 			pulseduration:0.3
 		}
        
-        var nmmenu = new Y.NMMenus(config);
+		var nmmenu = new Y.NMMenus(config);
        
    		function ajaxLoadFunc(nmmenu) {
 			Y.all('#' + nmmenu.get('menudivid') + ' li a.topLink').each(function(node) {
@@ -117,19 +117,19 @@ Full Usage Example
 			});
 		}
 
-        function ajaxLoadTrigger(configObj) {
-                switch (configObj.id) {
-                        case 'menu_JohnColtrane':
-                        //alert('do Coltrane thing');
-                        break;
-                       
-                        case 'menu_MilesDavis':
-                        //alert('do Miles Davis thing');
-                        break;
-                       
-                        default:
-                        window.location.href = configObj.page;
-                        break;
-                }
-        }
+		function ajaxLoadTrigger(configObj) {
+			switch (configObj.id) {
+				case 'menu_JohnColtrane':
+				//alert('do Coltrane thing');
+				break;
+
+				case 'menu_MilesDavis':
+				//alert('do Miles Davis thing');
+				break;
+
+				default:
+				window.location.href = configObj.page;
+				break;
+			}
+		}
 	});
