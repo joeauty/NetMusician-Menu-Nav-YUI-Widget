@@ -75,7 +75,9 @@ where the first argument is the CSS ID of the item that should pulsate (i.e. the
 Full Usage Example
 ------------------
 
-	YUI().use('gallery-nmmenus', 'event-delegate', function(Y) {
+	YUI({
+		gallery:'gallery-2011.07.06-19-30'
+	}).use('gallery-nmmenus', 'event-delegate', function(Y) {
 		var config = {
 			anim:'blind',
 			ajaxLoadFunc:Y.bind(ajaxLoadFunc),
