@@ -68,8 +68,7 @@ YUI.add('gallery-nmmenus', function(Y){
 							display:'block',
 							position:'absolute',
 							top:node.getComputedStyle('height'),
-							width:menuDimensions[0],
-							opacity:1
+							width:menuDimensions[0]
 						});
 						// start transition
 						subMenu.transition({
