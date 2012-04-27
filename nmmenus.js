@@ -1,16 +1,16 @@
 YUI.add('gallery-nmmenus', function(Y){    
 	
-    Y.NMMenus = Y.Base.create('nmmenus', Y.Widget, [], {	 
-		initializer : function( config ) {		
+    Y.NMMenus = Y.Base.create('nmmenus', Y.Widget, [], { 
+		initializer : function( config ) {
 			// add hasSubMenu class to all submenus
 			Y.all('#' + this.get('menudivid') + ' ul li ul').each(function(submenu) {
 				submenu.get('parentNode').one('.topLink').addClass('hasSubMenu');
 			});
-								
+
 			if (this.get('ajaxLoadFunc')) {	
 				// invoke custom function that sets up JS observers for menu items
 			        this.get('ajaxLoadFunc').call(null, this, this);
-			}			
+			}
 			
 			// init variables for menuItemPulsate function
 			this.set('pulsesleft', this.get('pulses'));
@@ -30,11 +30,11 @@ YUI.add('gallery-nmmenus', function(Y){
 					}, node);
 				}
 			});
-					
+
 			Y.all('#' + this.get('menudivid') + ' .hasSubMenu').each(function(node, idx) {
-				var topLi = node.get('parentNode'),			
-					subMenu = topLi.one('ul');		
-										
+				var topLi = node.get('parentNode'),
+					subMenu = topLi.one('ul');
+
 				// establish mouseenter observer
 				Y.on('mouseenter', function(e) {
 					// make sure all other menus do not have .active class set
@@ -45,7 +45,7 @@ YUI.add('gallery-nmmenus', function(Y){
 					
 					// calculate menu dimensions
 					var menuDimensions = this.calcMenuDimensions(subMenu);
-										
+
 					switch (this.get('anim')) {
 						case 'fade':
 						subMenu.setStyles({
@@ -89,12 +89,12 @@ YUI.add('gallery-nmmenus', function(Y){
 				}, topLi, this);
 				
 				Y.on('mouseleave', function(e) {
-					// hide menu				
+					// hide menu
 					this.hideNavMenu.call(this, {
-						topLi:topLi	
+						topLi:topLi
 					});
 				}, topLi, this);
-			}, this);		
+			}, this);
 		},
 
 		calcMenuDimensions : function(subMenu) {
@@ -125,7 +125,7 @@ YUI.add('gallery-nmmenus', function(Y){
 							configObj.topLi.removeClass('active');
 						}
 					}
-				});	
+				});
 				break;
 
 				case 'blind':
@@ -169,8 +169,8 @@ YUI.add('gallery-nmmenus', function(Y){
 					else {
 						this.menuItemPulsate(e.target.get('id'), function() {
 							window.location.href = e.target.get('href');
-						});	
-					}			
+						});
+					}
 				}, this), node, 'a');
 			}, this);
 		},
@@ -207,7 +207,7 @@ YUI.add('gallery-nmmenus', function(Y){
 											// no custom JS load trigger, just navigate to href
 											Y.log('load page');
 											window.location.href = Y.one('#' + ID).get('pathname');
-										}	
+										}
 									}
 								}, this)
 							}
