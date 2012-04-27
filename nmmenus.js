@@ -14,7 +14,7 @@ YUI.add('gallery-nmmenus', function(Y){
 			
 			// init variables for menuItemPulsate function
 			this.set('pulsesleft', this.get('pulses'));
-			this.set('pulseduration', this.get('pulseduration') / this.get('pulses'));									
+			this.set('pulseduration', this.get('pulseduration') / this.get('pulses'));
 			
 			if (!this.get('nopulsate') && !this.get('ajaxLoadFunc')) {
 				// no custom AJAX stuff set, trigger menu item pulsate
@@ -24,7 +24,7 @@ YUI.add('gallery-nmmenus', function(Y){
 			// make sure that top level menu items are not erronously marked as active
 			Y.all('#' + this.get('menudivid') + ' .topLink').each(function(node) {
 				if (!node.hasClass('hasSubMenu')) {	
-					// make sure top level links are marked as inactive on mouseleave			
+					// make sure top level links are marked as inactive on mouseleave
 					Y.on('mouseleave', function(e) {
 						node.get('parentNode').removeClass('active');
 					}, node);
@@ -36,15 +36,15 @@ YUI.add('gallery-nmmenus', function(Y){
 					subMenu = topLi.one('ul');		
 										
 				// establish mouseenter observer
-				Y.on('mouseenter', function(e) {					
-					// make sure all other menus do not have .active class set											
-					Y.all('#' + this.get('menudivid') + ' .hasSubMenu').get('parentNode').removeClass('active');																																												
+				Y.on('mouseenter', function(e) {
+					// make sure all other menus do not have .active class set
+					Y.all('#' + this.get('menudivid') + ' .hasSubMenu').get('parentNode').removeClass('active');
 					
 					// mark menu as active
 					topLi.addClass('active');
 					
 					// calculate menu dimensions
-					var menuDimensions = this.calcMenuDimensions(subMenu);				
+					var menuDimensions = this.calcMenuDimensions(subMenu);
 										
 					switch (this.get('anim')) {
 						case 'fade':
@@ -75,10 +75,10 @@ YUI.add('gallery-nmmenus', function(Y){
 							height:menuDimensions[1],
 							duration:this.get('inDuration'),
 							easing:'ease-out',
-							on : {								
-								end:function() {									
-									subMenu.setStyle('height', '');																																				
-								}												
+							on : {
+								end:function() {
+									subMenu.setStyle('height', '');
+								}
 							}
 						});
 						break;
@@ -93,7 +93,7 @@ YUI.add('gallery-nmmenus', function(Y){
 					this.hideNavMenu.call(this, {
 						topLi:topLi	
 					});
-				}, topLi, this);							
+				}, topLi, this);
 			}, this);		
 		},
 
@@ -105,7 +105,7 @@ YUI.add('gallery-nmmenus', function(Y){
 			});
 			var menuHeight = subMenu.getComputedStyle('height');
 			var menuWidth = subMenu.getComputedStyle('width');
-			subMenu.setStyle('display', 'none');		
+			subMenu.setStyle('display', 'none');
 			
 			return [menuWidth, menuHeight];
 		},
@@ -122,21 +122,21 @@ YUI.add('gallery-nmmenus', function(Y){
 					on : {
 						end:function() {
 							configObj.subMenu.setStyle('height', '0px');
-							configObj.topLi.removeClass('active');						
+							configObj.topLi.removeClass('active');
 						}
-					}									
+					}
 				});	
 				break;
 
-				case 'blind':				
+				case 'blind':
 				configObj.subMenu.transition({
 					height:'0px',
 					duration:this.get('outDuration'),
-					easing:'ease-out',							
-					on : {					
-						end:function() {							
+					easing:'ease-out',
+					on : {
+						end:function() {
 							configObj.subMenu.setStyle('display', 'none');
-							configObj.topLi.removeClass('active');																																										
+							configObj.topLi.removeClass('active');
 						}
 					}
 				});
@@ -164,15 +164,15 @@ YUI.add('gallery-nmmenus', function(Y){
 					e.preventDefault();
 					if (e.target.hasClass('topLink')) {
 						// top level link, do not init pulsate
-						window.location.href = e.target.get('href');	
+						window.location.href = e.target.get('href');
 					}
 					else {
 						this.menuItemPulsate(e.target.get('id'), function() {
 							window.location.href = e.target.get('href');
 						});	
 					}			
-				}, this), node, 'a');		
-			}, this);		
+				}, this), node, 'a');
+			}, this);
 		},
 			
 		menuItemPulsate : function(ID, callbackFunc, callbackArgs) {
@@ -192,10 +192,10 @@ YUI.add('gallery-nmmenus', function(Y){
 										this.menuItemPulsate.call(this, ID, callbackFunc, callbackArgs);
 									}
 									else {
-										// reset pulsesleft var									
+										// reset pulsesleft var
 										this.set('pulsesleft', this.get('pulses'));
 										
-										// hide menu									
+										// hide menu
 										this.hideNavMenu.call(this, {
 											topLi:Y.one('#' + this.get('menudivid') + ' li.active')	
 										});
@@ -208,7 +208,7 @@ YUI.add('gallery-nmmenus', function(Y){
 											Y.log('load page');
 											window.location.href = Y.one('#' + ID).get('pathname');
 										}	
-									}								
+									}
 								}, this)
 							}
 						});
