@@ -76,7 +76,7 @@ Full Usage Example
 ------------------
 
 	YUI({
-		gallery:'gallery-2012.05.02-20-10'
+		gallery:'gallery-2012.06.27-20-10'
 	}).use('gallery-nmmenus', 'event-delegate', function(Y) {
 		var config = {
 			anim:'blind',

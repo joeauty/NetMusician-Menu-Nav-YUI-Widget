@@ -253,4 +253,4 @@ YUI.add('gallery-nmmenus', function(Y){
 		}
     });
     
-}, 'gallery-2012.05.02-20-10', {requires: ['base-build', 'widget', 'event-mouseenter', 'node', 'transition']});
+}, 'gallery-2012.06.27-20-10', {requires: ['base-build', 'widget', 'event-mouseenter', 'node', 'transition']});
