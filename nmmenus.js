@@ -3,8 +3,11 @@ YUI.add('gallery-nmmenus', function(Y){
     Y.NMMenus = Y.Base.create('nmmenus', Y.Widget, [], { 
 		initializer : function( config ) {
 			// add hasSubMenu class to all submenus
-			Y.all('#' + this.get('menudivid') + ' ul li ul:first-child').each(function(submenu) {
-				submenu.get('parentNode').one('.topLink').addClass('hasSubMenu');
+			Y.all('#' + this.get('menudivid') + ' ul li ul').each(function(submenu) {
+				if (submenu.get('parentNode').one('.topLink')) {
+					// only add class to first level of submenu
+					submenu.get('parentNode').one('.topLink').addClass('hasSubMenu');
+				}
 			});
 
 			if (this.get('ajaxLoadFunc')) {	
