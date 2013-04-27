@@ -4,7 +4,10 @@ YUI.add('gallery-nmmenus', function(Y){
 		initializer : function( config ) {
 			// add hasSubMenu class to all submenus
 			Y.all('#' + this.get('menudivid') + ' ul li ul').each(function(submenu) {
-				submenu.get('parentNode').one('.topLink').addClass('hasSubMenu');
+				if (submenu.get('parentNode').one('.topLink')) {
+					// only add class to first level of submenu
+					submenu.get('parentNode').one('.topLink').addClass('hasSubMenu');
+				}
 			});
 
 			if (this.get('ajaxLoadFunc')) {	
@@ -208,7 +211,6 @@ YUI.add('gallery-nmmenus', function(Y){
 										}
 										else {
 											// no custom JS load trigger, just navigate to href
-											Y.log('load page');
 											window.location.href = Y.one('#' + ID).get('href');
 										}
 									}
